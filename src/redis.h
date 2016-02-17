@@ -933,6 +933,7 @@ struct redisServer {
     rocksdb_options_t *kvoptions;
     rocksdb_writeoptions_t *writeoptions;
     rocksdb_readoptions_t *readoptions;
+    int entriesPerBatch;
 
 };
 

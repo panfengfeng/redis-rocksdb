@@ -1797,6 +1797,7 @@ void initServer(void) {
 	rocksdb_writeoptions_disable_WAL(server.writeoptions, 1);
 
 	server.readoptions = rocksdb_readoptions_create();
+	server.entriesPerBatch = 5;
 	
     	char *err = NULL;
 	const char DBPath[] = "/tmp/rocksdb_simple_example";
