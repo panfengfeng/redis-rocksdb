@@ -49,7 +49,7 @@ int dbgetGenericCommand(redisClient *c) {
     		addReply(c, shared.nullbulk);
 		return REDIS_OK;
 	}
-	robj *o = createObject(REDIS_STRING, returned_value);
+	robj *o = createRawStringObject(returned_value, strlen(returned_value));
     	addReplyBulk(c, o);
     	return REDIS_OK;
 }
