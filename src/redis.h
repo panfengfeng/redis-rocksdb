@@ -1418,6 +1418,8 @@ void getCommand(redisClient *c);
 // kvdb
 void dbputCommand(redisClient *c);
 void dbgetCommand(redisClient *c);
+void dbdelCommand(redisClient *c);
+void dbwriteCommand(redisClient *c);
 // kvdb
 void delCommand(redisClient *c);
 void existsCommand(redisClient *c);

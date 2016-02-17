@@ -123,6 +123,8 @@ struct redisServer server; /* server global state */
 struct redisCommand redisCommandTable[] = {
     {"dbget",dbgetCommand,2,"rF",0,NULL,1,1,1,0,0},
     {"dbput",dbputCommand,-3,"wm",0,NULL,1,1,1,0,0},
+    {"dbdel",dbdelCommand,-2,"w",0,NULL,1,-1,1,0,0},
+    {"dbwrite",dbwriteCommand,-3,"wm",0,NULL,1,-1,2,0,0},
     {"get",getCommand,2,"rF",0,NULL,1,1,1,0,0},
     {"set",setCommand,-3,"wm",0,NULL,1,1,1,0,0},
     {"setnx",setnxCommand,3,"wmF",0,NULL,1,1,1,0,0},
