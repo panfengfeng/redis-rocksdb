@@ -578,6 +578,9 @@ typedef struct redisClient {
     /* Response buffer */
     int bufpos;
     char buf[REDIS_REPLY_CHUNK_BYTES];
+
+//    rocksdb_t *kvdb;
+
 } redisClient;
 
 struct saveparam {

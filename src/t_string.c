@@ -145,13 +145,17 @@ void psetexCommand(redisClient *c) {
 int getGenericCommand(redisClient *c) {
     robj *o;
 
-    if ((o = lookupKeyReadOrReply(c,c->argv[1],shared.nullbulk)) == NULL)
+    if ((o = lookupKeyReadOrReply(c,c->argv[1],shared.nullbulk)) == NULL) {
+	printf("1\n");
         return REDIS_OK;
+    }
 
     if (o->type != REDIS_STRING) {
+	printf("2\n");
         addReply(c,shared.wrongtypeerr);
         return REDIS_ERR;
     } else {
+	printf("3\n");
         addReplyBulk(c,o);
         return REDIS_OK;
     }

@@ -996,20 +996,16 @@ static void repl(void) {
                 if (strcasecmp(argv[0],"quit") == 0 ||
                     strcasecmp(argv[0],"exit") == 0)
                 {
-		    printf("running quit or exit\n");
                     exit(0);
                 } else if (argc == 3 && !strcasecmp(argv[0],"connect")) {
-		    printf("argc == 3 && !strcasecmp(argv[0],connect)\n");
                     sdsfree(config.hostip);
                     config.hostip = sdsnew(argv[1]);
                     config.hostport = atoi(argv[2]);
                     cliRefreshPrompt();
                     cliConnect(1);
                 } else if (argc == 1 && !strcasecmp(argv[0],"clear")) {
-		    printf("argc == 1 && !strcasecmp(argv[0],clear)\n");
                     linenoiseClearScreen();
                 } else {
-		    printf("others\n");
                     long long start_time = mstime(), elapsed;
                     int repeat, skipargs = 0;
 

@@ -29,27 +29,46 @@
 
 #include "redis.h"
 #include <math.h> /* isnan(), isinf() */
+#include <stdio.h>
+#include <string.h>
+#include <stdlib.h>
+#include <assert.h>
+
 
 /*-----------------------------------------------------------------------------
  * KVDB Commands
  *----------------------------------------------------------------------------*/
 
 int dbgetGenericCommand(redisClient *c) {
-    addReply(c,shared.ok);
-    return REDIS_OK;
+	char *key = (char *)c->argv[1]->ptr;
+	rocksdb_readoptions_t *readoptions = rocksdb_readoptions_create();
+ 	size_t len = 0;
+	char *err = NULL;
+	char *returned_value;
+  	returned_value = rocksdb_get(server.kvdb, readoptions, key, strlen(key), &len, &err);
+	if (returned_value == NULL || len == 0) {
+    		addReply(c, shared.nullbulk);
+		return REDIS_OK;
+	}
+	robj *o = createObject(REDIS_STRING, returned_value);
+    	addReplyBulk(c, o);
+    	return REDIS_OK;
 }
 
 void dbgetCommand(redisClient *c) {
-	printf("Executing dbgetCommand\n");
 	dbgetGenericCommand(c);
 }
 
 void dbputGenericCommand(redisClient *c, robj *ok_reply) {
+	rocksdb_writeoptions_t *writeoptions = rocksdb_writeoptions_create();
+	char *key = (char *)c->argv[1]->ptr;
+ 	char *value = (char *)c->argv[2]->ptr;
+	char *err = NULL;
+	rocksdb_put(server.kvdb, writeoptions, key, strlen(key), value, strlen(value) + 1, &err);
+	assert(!err);
 	addReply(c, ok_reply ? ok_reply : shared.ok);
 }
 
 void dbputCommand(redisClient *c) {
-	printf("Executing dbputCommand\n");
-	c->argv[2] = tryObjectEncoding(c->argv[2]);
         dbputGenericCommand(c, NULL);
 }
