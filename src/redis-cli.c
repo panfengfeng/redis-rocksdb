@@ -996,7 +996,7 @@ static void repl(void) {
                 if (strcasecmp(argv[0],"quit") == 0 ||
                     strcasecmp(argv[0],"exit") == 0)
                 {
-		    printf("running quit ot exit\n");
+		    printf("running quit or exit\n");
                     exit(0);
                 } else if (argc == 3 && !strcasecmp(argv[0],"connect")) {
 		    printf("argc == 3 && !strcasecmp(argv[0],connect)\n");
