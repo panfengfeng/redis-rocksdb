@@ -51,7 +51,7 @@ endif
 
 FINAL_CFLAGS=$(STD) $(WARN) $(OPT) $(DEBUG) $(CFLAGS) $(REDIS_CFLAGS)
 FINAL_LDFLAGS=$(LDFLAGS) $(REDIS_LDFLAGS) $(DEBUG)
-FINAL_LIBS=-lm
+FINAL_LIBS=-lm -lrocksdb -lsnappy
 DEBUG=-g -ggdb
 
 ifeq ($(uname_S),SunOS)
@@ -76,7 +76,7 @@ endif
 endif
 endif
 # Include paths to dependencies
-FINAL_CFLAGS+= -I../deps/hiredis -I../deps/linenoise -I../deps/lua/src
+FINAL_CFLAGS+= -I../deps/hiredis -I../deps/linenoise -I../deps/lua/src -I/home/nark/experiment/rocksdb-4.1/include
 
 ifeq ($(MALLOC),tcmalloc)
 	FINAL_CFLAGS+= -DUSE_TCMALLOC

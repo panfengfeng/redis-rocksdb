@@ -1564,6 +1564,13 @@ void initServerConfig(void) {
     server.assert_line = 0;
     server.bug_report_start = 0;
     server.watchdog_period = 0;
+ 
+	server.kvoptions = rocksdb_options_create();
+	rocksdb_options_set_create_if_missing(server.kvoptions, 1);
+    	char *err = NULL;
+	const char DBPath[] = "/tmp/rocksdb_simple_example";
+	server.kvdb = rocksdb_open(server.kvoptions, DBPath, &err);
+	assert(!err);
 }
 
 /* This function will try to raise the max number of open files accordingly to
