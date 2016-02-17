@@ -40,11 +40,10 @@
  *----------------------------------------------------------------------------*/
 int dbgetGenericCommand(redisClient *c) {
 	char *key = (char *)c->argv[1]->ptr;
-	rocksdb_readoptions_t *readoptions = rocksdb_readoptions_create();
  	size_t len = 0;
 	char *err = NULL;
 	char *returned_value;
-  	returned_value = rocksdb_get(server.kvdb, readoptions, key, strlen(key), &len, &err);
+  	returned_value = rocksdb_get(server.kvdb, server.readoptions, key, strlen(key), &len, &err);
 	if (returned_value == NULL || len == 0) {
     		addReply(c, shared.nullbulk);
 		return REDIS_OK;
@@ -59,11 +58,10 @@ void dbgetCommand(redisClient *c) {
 }
 
 void dbputGenericCommand(redisClient *c, robj *ok_reply) {
-	rocksdb_writeoptions_t *writeoptions = rocksdb_writeoptions_create();
 	char *key = (char *)c->argv[1]->ptr;
  	char *value = (char *)c->argv[2]->ptr;
 	char *err = NULL;
-	rocksdb_put(server.kvdb, writeoptions, key, strlen(key), value, strlen(value) + 1, &err);
+	rocksdb_put(server.kvdb, server.writeoptions, key, strlen(key), value, strlen(value) + 1, &err);
 	assert(!err);
 	addReply(c, ok_reply ? ok_reply : shared.ok);
 }
@@ -73,10 +71,9 @@ void dbputCommand(redisClient *c) {
 }
 
 void dbdelGenericCommand(redisClient *c, robj *ok_reply) {
-	rocksdb_writeoptions_t *writeoptions = rocksdb_writeoptions_create();
 	char *key = (char *)c->argv[1]->ptr;
 	char *err = NULL;
-	rocksdb_delete(server.kvdb, writeoptions, key, strlen(key), &err);
+	rocksdb_delete(server.kvdb, server.writeoptions, key, strlen(key), &err);
 	assert(!err);
 	addReply(c, ok_reply ? ok_reply : shared.ok);
 }
@@ -87,7 +84,6 @@ void dbdelCommand(redisClient *c) {
 
 void dbwriteGenericCommand(redisClient *c, robj *ok_reply) {
 	int j;
-	rocksdb_writeoptions_t *writeoptions = rocksdb_writeoptions_create();
 
 	rocksdb_writebatch_t *wb = rocksdb_writebatch_create();
 	for (j = 1; j < c->argc; j += 2) {
@@ -96,7 +92,7 @@ void dbwriteGenericCommand(redisClient *c, robj *ok_reply) {
 		rocksdb_writebatch_put(wb, key, strlen(key), value, strlen(value) + 1);
     	}
 	char *err = NULL;
-	rocksdb_write(server.kvdb, writeoptions, wb, &err);
+	rocksdb_write(server.kvdb, server.writeoptions, wb, &err);
 	assert(!err);
 	rocksdb_writebatch_destroy(wb);
 	addReply(c, ok_reply ? ok_reply : shared.ok);

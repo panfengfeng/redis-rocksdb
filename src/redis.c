@@ -1787,9 +1787,17 @@ void initServer(void) {
     server.get_ack_from_slaves = 0;
     server.clients_paused = 0;
 
-
 	server.kvoptions = rocksdb_options_create();
 	rocksdb_options_set_create_if_missing(server.kvoptions, 1);
+	rocksdb_options_set_write_buffer_size(server.kvoptions, 1073741824);
+	rocksdb_options_set_max_write_buffer_number(server.kvoptions, 12);
+	rocksdb_options_set_min_write_buffer_number_to_merge(server.kvoptions, 12);
+
+	server.writeoptions = rocksdb_writeoptions_create();
+	rocksdb_writeoptions_disable_WAL(server.writeoptions, 1);
+
+	server.readoptions = rocksdb_readoptions_create();
+	
     	char *err = NULL;
 	const char DBPath[] = "/tmp/rocksdb_simple_example";
 	server.kvdb = rocksdb_open(server.kvoptions, DBPath, &err);

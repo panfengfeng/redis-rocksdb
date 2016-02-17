@@ -931,6 +931,8 @@ struct redisServer {
 
     rocksdb_t *kvdb;
     rocksdb_options_t *kvoptions;
+    rocksdb_writeoptions_t *writeoptions;
+    rocksdb_readoptions_t *readoptions;
 
 };
 
